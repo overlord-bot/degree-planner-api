@@ -67,10 +67,10 @@ class Degree_Planner():
         sche = user.get_schedule(user.curr_schedule)
 
         if message['mode'] =='get':
-            return self.res(res='', user=user)
+            return self.res(res='Here is your schedule', user=user)
 
         if message['mode'] == 'post':
-            await planner.load_catalog()
+            await self.load_catalog()
             semester = int(message['semester'])
             if semester not in range(0, sche.SEMESTERS_MAX):
                 return self.res(res=["invalid semester, please enter number between 0 and 11"], crit_err=True, user=user)
@@ -117,9 +117,9 @@ class Degree_Planner():
         # 2) degree planner's directory
         # 3) root directory of the project folder
 
-        if os.path.isfile("./dependencies/data/course_data.json"):
+        if os.path.isfile("./endpoints/deg_planner/dependencies/data/course_data.json"):
             #await user.msg(message, f"file found: {os.getcwd()}/cogs/degree planner/data/course_data.json")
-            f = open("./dependencies/data/course_data.json")
+            f = open("./endpoints/deg_planner/dependencies/data/course_data.json")
         elif os.path.isfile("./dependencies/degree planner/course_data.json"):
             #await user.msg(message, f"file found: {os.getcwd()}/cogs/degree planner/course_data.json")
             f = open("./dependencies/degree planner/course_data.json")
@@ -137,7 +137,7 @@ class Degree_Planner():
         return
 
     async def print_catalog(self):
-        await planner.load_catalog()
+        await self.load_catalog()
         return {
             'error': False,
             'response': self.catalog.to_json()
@@ -152,7 +152,7 @@ class Degree_Planner():
             'user': user.username,
             'schedule_name': user.curr_schedule,
             'schedule': sche.to_json(),
-            'error': kwargs['error'] if 'error' in kwargs else None,
+            'error': kwargs['error'] if 'error' in kwargs else False,
             'response': kwargs['res']
         }
 
